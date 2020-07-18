@@ -17,10 +17,24 @@ class Downloader:
         return "https://www.youtube.com/watch?v={video_id}".format(video_id=video_id)
 
     def get_support_spec(self, url):
+        print(YouTube(url).streams.filter(fps=30, res="480p", type="video", file_extension="mp4").first())
+
+        stream_list = []
         type_list = []
         fps_list = []
         res_list = []
         for stream in YouTube(url).streams:
+            stream_list.append({
+                "itag": stream.itag,
+                "mime_type": stream.mime_type,
+                "res": stream.resolution,
+                "fps": stream.fps,
+                "vcodec": stream.video_codec,
+                "acodec": stream.audio_codec,
+                "progressive": stream.is_progressive,
+                "type": stream.type
+            })
+
             if stream.type is not None:
                 type_list.append(stream.type)
             if stream.fps is not None:
@@ -28,7 +42,7 @@ class Downloader:
             if stream.resolution is not None:
                 res_list.append(stream.resolution)
 
-        return list(set(type_list)), list(set(fps_list)), list(set(res_list))
+        return stream_list, list(set(type_list)), list(set(fps_list)), list(set(res_list))
 
     # v: video_id
     # fps: 30fps, 60fps
@@ -43,7 +57,7 @@ class Downloader:
         url = self.get_youtube_url(v)
         streams = YouTube(url).streams
 
-        if media_type is "video":
+        if media_type == "video":
             media = streams.filter(fps=fps, res=res, type=media_type, file_extension="mp4").first()
         else:  # audio
             media = streams.filter(type=media_type).first()

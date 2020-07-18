@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Youtube downloader</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link href='https://fonts.googleapis.com/css?family=Rowdies' rel='stylesheet'>
     <link rel="stylesheet" href="/static/css/style.css">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
@@ -21,6 +21,9 @@
     </form>
 
     <form class="form-group" id="youtube-download-form" method="GET" style="display: none;">
+        <input class="btn" type="button" value="Support list"
+               data-toggle="modal"
+               data-target="#support-list-modal"/>
         <label class="youtube-download-form-select-media-type-label"> Media type
             <select class="custom-select youtube-download-form-select-media-type"> </select>
         </label>
@@ -34,6 +37,36 @@
     </form>
 
     <ul id="video-download-list"></ul>
+
+    <!-- Modal -->
+    <div class="modal fade" id="support-list-modal" tabindex="-1" role="dialog"
+         aria-labelledby="support-list-modal-title" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="support-list-modal-title">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table">
+                        <thead>
+                        <th>Media type</th>
+                        <th>fps</th>
+                        <th>res</th>
+                        </thead>
+                        <tbody id="support-list-modal-tbody">
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="global-loader-mask">
         <div class="lds-roller">
@@ -50,6 +83,9 @@
 </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
 <script>
     $(document).ready(function () {
         let searched_video_id = null;
@@ -80,6 +116,7 @@
                 v: params.v
             };
 
+            $("#video-download-list").children("li").remove();
             showLoader();
             $.ajax({
                 type: "GET",
@@ -89,6 +126,7 @@
                 data: data,
                 success: function (response, status, xhr) {
                     if (response.status === "SUCCESS") {
+                        let stream_list = response.stream_list.sort();
                         let type_list = response.type_list.sort().reverse();
                         let fps_list = response.fps_list.sort();
                         let res_list = response.res_list.sort((a, b) => {
@@ -106,10 +144,52 @@
                             return 0;
                         });
 
+                        {#support-list-modal-tbody#}
+                        $("#support-list-modal-tbody").children("tr").remove();
+                        let savedStreamMap = new Map();
+                        stream_list
+                            .filter(function (stream) {
+                                let key = stream.type + "_" + stream.fps + "_" + stream.res;
+                                if (savedStreamMap.has(key)) {
+                                    return false;
+                                }
+
+                                savedStreamMap.set(key, stream);
+                                return true;
+                            })
+                            .sort((a, b) => {
+                                let value1 = a.res;
+                                if (value1 != null) {
+                                    value1 = value1.replace("p", "");
+                                }
+
+                                let value2 = b.res;
+                                if (value2 != null) {
+                                    value2 = value2.replace("p", "");
+                                }
+
+                                if (Number(value1) > Number(value2)) {
+                                    return 1;
+                                }
+
+                                if (Number(value1) < Number(value2)) {
+                                    return -1;
+                                }
+
+                                return 0;
+                            })
+                            .forEach(function (stream) {
+                                $("#support-list-modal-tbody").append("<tr>"
+                                    + "<td>" + stream.type + "</td>"
+                                    + "<td>" + stream.fps + "</td>"
+                                    + "<td>" + stream.res + "</td>"
+                                    + "</tr>")
+                            });
+
                         setOptions($(".youtube-download-form-select-media-type"), type_list);
                         setOptions($(".youtube-download-form-select-fps"), fps_list);
                         setOptions($(".youtube-download-form-select-res"), res_list);
-
+                        $(".youtube-download-form-select-res").val(res_list[res_list.length / 2]);
 
                         $("#youtube-download-form").show();
                         searched_video_id = params.v;
@@ -144,6 +224,7 @@
                 res: $("select.youtube-download-form-select-res").val()
             };
 
+            $("#video-download-list").children("li").remove();
             showLoader();
             $.ajax({
                 type: "GET",
@@ -168,7 +249,6 @@
                         document.getElementById("video-download-list").appendChild(li);
                         return;
                     }
-
 
                     showAlert(response.message);
                     showAlert(response.error);

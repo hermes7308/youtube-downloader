@@ -49,7 +49,7 @@ label {
     justify-content: center;
 }
 
-#youtube-download-form > label {
+#youtube-download-form > * {
     margin-right: 20px;
     margin-left: 20px;
 }
