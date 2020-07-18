@@ -7,15 +7,15 @@ except Exception as e:
 
 
 class Downloader:
-    def __init__(self):
-        print("Downloader created")
+    def __init__(self, output_path=None):
+        print("## Downloader created")
+        self.output_path = output_path
 
-    @staticmethod
-    def download(v):
+    def download(self, v):
         url = "https://www.youtube.com/watch?v={video_id}".format(video_id=v)
         video = YouTube(url).streams.first()
         file_name = video.default_filename
-        saved_path = video.download()
+        saved_path = video.download(self.output_path)
 
         return {
             "v": v,

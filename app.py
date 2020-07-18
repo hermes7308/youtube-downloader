@@ -1,13 +1,10 @@
-from flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request, send_from_directory
 
 from core.downloader import Downloader
 
-# save_path = "C:\\Users\\herme\\Desktop\\video\\youtube"
-# downloader = Downloader(save_path)
-# url = "https://www.youtube.com/watch?v=0qSEWvvA6gU"
-# downloader.download(url)
+output_path = "C:\\Users\\herme\\Desktop\\video\\youtube"
+downloader = Downloader(output_path)
 
-downloader = Downloader()
 app = Flask(__name__)
 
 
@@ -18,6 +15,7 @@ def index():
 
 @app.route("/download", methods=["GET"])
 def download():
+    global result
     v = request.args.get("v")
     if v is None:
         return {
@@ -40,7 +38,7 @@ def download():
 @app.route("/download-video", methods=["GET"])
 def download_video():
     file_name = request.args.get("file_name")
-    return send_file(file_name)
+    return send_from_directory(output_path, file_name)
 
 
 if __name__ == '__main__':
