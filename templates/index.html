@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Youtube downloader</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href='https://fonts.googleapis.com/css?family=Rowdies' rel='stylesheet'>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+</head>
+<body>
+<div class="container">
+    <h1>Youtube downloader</h1>
+
+    <form class="form-group" id="youtube-download-form" method="GET">
+        <input class="form-control" id="url" type="text" name="url"
+               placeholder="https://www.youtube.com/watch?v=3icPpsf9bXk"/>
+        <input class="btn" type="submit" value="Download"/>
+    </form>
+
+    <ul id="video-download-list"></ul>
+
+    <div class="global-loader-mask">
+        <div class="lds-roller">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#youtube-download-form").submit(function (e) {
+            e.preventDefault();
+
+            let url = $("#url").val();
+            let params = getUrlParams(url);
+            if (params.v == null) {
+                console.log("This is not correct Youtube url.");
+                return;
+            }
+
+            showLoader();
+            $.ajax({
+                type: "GET",
+                dataType: 'json',
+                contentType: "application/json",
+                url: "/download",
+                data: {
+                    v: params.v
+                },
+                success: function (response, status, xhr) {
+                    if (response.status === "SUCCESS") {
+                        {# <a> #}
+                        let a = document.createElement("a");
+                        a.href = "/download-video?file_name=" + response.file_name;
+                        a.text = response.file_name;
+                        a.download = response.file_name;
+
+                        {# <li> #}
+                        let li = document.createElement("li");
+                        li.appendChild(a);
+
+                        {# <ul> #}
+                        document.getElementById("video-download-list").appendChild(li);
+                        return;
+                    }
+
+                    alert(response.message);
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert(errorMessage);
+                },
+                complete: function (data) {
+                    hideLoader();
+                }
+            })
+        });
+
+        function getUrlParams(url) {
+            let params = {};
+            url.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (str, key, value) {
+                params[key] = value;
+            });
+            return params;
+        }
+    });
+
+    function showLoader() {
+        $("body").addClass("hide-scroll");
+        $(".global-loader-mask").css("display", "flex");
+    }
+
+    function hideLoader() {
+        $("body").removeClass("hide-scroll");
+        $(".global-loader-mask").css("display", "none");
+    }
+</script>
+</html>
