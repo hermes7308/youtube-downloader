@@ -52,7 +52,7 @@
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script>
     $(document).ready(function () {
-        $(".youtube-download-form").hide();
+        $("#youtube-download-form").hide();
         let searched_video_id = null;
 
         $('select.youtube-download-form-select-media-type').change(function () {
@@ -112,7 +112,7 @@
                         setOptions($(".youtube-download-form-select-res"), res_list);
 
 
-                        $(".youtube-download-form").show();
+                        $("#youtube-download-form").show();
                         searched_video_id = params.v;
 
                         return;
