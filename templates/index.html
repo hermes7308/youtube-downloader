@@ -62,9 +62,9 @@
                     if (response.status === "SUCCESS") {
                         {# <a> #}
                         let a = document.createElement("a");
-                        a.href = "/download-video?file_name=" + response.file_name;
-                        a.text = response.file_name;
-                        a.download = response.file_name;
+                        a.href = "/download-video?filename=" + response.filename + "&yyyymmdd=" + response.yyyymmdd;
+                        a.text = response.filename;
+                        a.download = response.filename;
 
                         {# <li> #}
                         let li = document.createElement("li");
@@ -75,7 +75,7 @@
                         return;
                     }
 
-                    alert(response.message);
+                    alert(response.message + ". " + response.error);
                 },
                 error: function (jqXhr, textStatus, errorMessage) {
                     alert(errorMessage);

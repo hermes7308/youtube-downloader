@@ -1,11 +1,16 @@
+import logging
+import os
+
 from flask import Flask, render_template, request, send_from_directory
 
 from core.downloader import Downloader
 
-output_path = "C:\\Users\\herme\\Desktop\\video\\youtube"
-downloader = Downloader(output_path)
+logging.basicConfig(level=logging.INFO)
 
 app = Flask(__name__)
+
+output_path = "C:\\Users\\herme\\Desktop\\video\\youtube"
+downloader = Downloader(output_path)
 
 
 @app.route("/")
@@ -25,20 +30,23 @@ def download():
 
     try:
         result = downloader.download(v)
-        result["status"] = "SUCCESS"
         return result
     except Exception as e:
-        print(e)
+        logging.error(e)
         return {
             "status": "FAIL",
-            "message": "Couldn't download result: " + result
+            "message": "Couldn't download this video",
+            "error": str(e)
         }
 
 
 @app.route("/download-video", methods=["GET"])
 def download_video():
-    file_name = request.args.get("file_name")
-    return send_from_directory(output_path, file_name)
+    yyyymmdd = request.args.get("yyyymmdd")
+    filename = request.args.get("filename")
+    directory = os.path.join(output_path, yyyymmdd)
+
+    return send_from_directory(directory, filename)
 
 
 if __name__ == '__main__':
