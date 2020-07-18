@@ -35,6 +35,25 @@ def index():
     return render_template("index.html")
 
 
+@app.route("/get-support-spec")
+def get_support_spec():
+    v = request.args.get("v")
+    if v is None:
+        return {
+            "status": "FAIL",
+            "message": "Url is empty."
+        }
+
+    url = downloader.get_youtube_url(video_id=v)
+    type_list, fps_list, res_list = downloader.get_support_spec(url)
+    return {
+        "status": "SUCCESS",
+        "type_list": type_list,
+        "fps_list": fps_list,
+        "res_list": res_list
+    }
+
+
 @app.route("/download", methods=["GET"])
 def download():
     global result
@@ -44,9 +63,12 @@ def download():
             "status": "FAIL",
             "message": "Url is empty."
         }
+    media_type = request.args.get("media_type")
+    fps = request.args.get("fps")
+    res = request.args.get("res")
 
     try:
-        result = downloader.download(v)
+        result = downloader.download(v=v, fps=fps, res=res, media_type=media_type)
         return result
     except Exception as e:
         logging.error(e)
@@ -67,4 +89,4 @@ def download_video():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5003)
+    app.run(host='0.0.0.0', port=5004)

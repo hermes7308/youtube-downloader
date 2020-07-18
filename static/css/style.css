@@ -2,6 +2,13 @@ html, body {
     width: 100%;
     height: 100%;
 }
+body * {
+    font-family: "Rowdies", serif;
+}
+
+label {
+    font-size: 20px;
+}
 
 .container {
     display: flex;
@@ -12,27 +19,39 @@ html, body {
 }
 
 .container > h1 {
-    font-family: "Rowdies", serif;
     font-size: 7vw;
+    font-weight: bold;
     background-color: white;
     color: #ff5555;
 }
 
-.container > form {
+#youtube-get-support-spec-form {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     width: 100%;
 }
 
-.container > form > input[type='text'] {
+#youtube-get-support-spec-form > input[type='text'] {
     display: inline-block;
     flex-grow: 1;
     width: calc(100% - 98px);
 }
 
-.container > form > input[type='submit'] {
+#youtube-get-support-spec-form > input[type='submit'] {
     width: 98px;
+}
+
+#youtube-download-form {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+#youtube-download-form > label {
+    margin-right: 20px;
+    margin-left: 20px;
 }
 
 .btn {
