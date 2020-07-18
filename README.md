@@ -12,14 +12,13 @@ You can download Youtube video using "Youtube downloader".
 ## Dependency
 ```
 # pip3 install pytube3
-
-# flask
-# apscheduler
+# pip3 install flask
+# pip3 install apscheduler
 ```
 
 ## Points to note when developing
 ```
 # app.py
 # set the downloaded video file
-home_path = "C:\\Users\\herme\\Desktop\\video\\youtube" 
+home_path = "/home/youtube" 
 ``` 
