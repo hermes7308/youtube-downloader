@@ -65,6 +65,7 @@
                         a.href = "/download-video?filename=" + response.filename + "&yyyymmdd=" + response.yyyymmdd;
                         a.text = response.filename;
                         a.download = response.filename;
+                        a.click();
 
                         {# <li> #}
                         let li = document.createElement("li");
