@@ -1,16 +1,33 @@
+import atexit
 import logging
 import os
 
+from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask, render_template, request, send_from_directory
 
 from core.downloader import Downloader
+from core.remover import Remover
 
 logging.basicConfig(level=logging.INFO)
 
 app = Flask(__name__)
 
-output_path = "C:\\Users\\herme\\Desktop\\video\\youtube"
-downloader = Downloader(output_path)
+home_path = "C:\\Users\\herme\\Desktop\\video\\youtube"
+
+downloader = Downloader(home_path)
+remover = Remover(home_path)
+
+
+def remove_video_job():
+    remover.remove()
+
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(func=remove_video_job, trigger="interval", seconds=3600)
+scheduler.start()
+
+# Shut down the scheduler when exiting the app
+atexit.register(lambda: scheduler.shutdown())
 
 
 @app.route("/")
@@ -44,7 +61,7 @@ def download():
 def download_video():
     yyyymmdd = request.args.get("yyyymmdd")
     filename = request.args.get("filename")
-    directory = os.path.join(output_path, yyyymmdd)
+    directory = os.path.join(home_path, yyyymmdd)
 
     return send_from_directory(directory, filename)
 

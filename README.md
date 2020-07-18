@@ -9,9 +9,17 @@ You can download Youtube video using "Youtube downloader".
 3. If the Youtube video is downloaded, you can see the download link in the bottom.
 4. Click the download link then you can get the Youtube video.
 
+## Dependency
+```
+# pip3 install pytube3
+
+# flask
+# apscheduler
+```
+
 ## Points to note when developing
 ```
 # app.py
 # set the downloaded video file
-output_path = "C:\\Users\\herme\\Desktop\\video\\youtube" 
+home_path = "C:\\Users\\herme\\Desktop\\video\\youtube" 
 ``` 

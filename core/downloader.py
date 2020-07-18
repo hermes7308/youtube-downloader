@@ -1,4 +1,3 @@
-# pip3 install pytube3
 import logging
 import os
 import time
