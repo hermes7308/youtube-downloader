@@ -7,9 +7,15 @@ services:
     restart: always
     expose:
       - 5005
+    volumes:
+      -  "/home/irteam/data:/home/irteam/data"
+      -  "/home/irteam/logs:/home/irteam/logs"
   nginx:
     build: ./nginx
     container_name: nginx
     restart: always
     ports:
       - "80:80"
+    volumes:
+      - "/home/irteam/data:/home/irteam/data"
+      - "/home/irteam/logs:/home/irteam/logs"
