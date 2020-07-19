@@ -10,4 +10,4 @@ ARG ENV
 ENV FLASK_ENV $ENV
 ENV FLASK_APP=/app/run.py
 
-CMD ["python3", "run.py"]
+CMD ["flask", "run"]
