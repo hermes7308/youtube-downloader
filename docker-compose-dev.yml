@@ -2,6 +2,10 @@ version: "3.7"
 
 services:
   flask:
+    build:
+      context: ./flask
+      args:
+        ENV: "dev"
     image: pando0314/youtube-downloader-flask
     container_name: flask
     restart: always
@@ -11,6 +15,10 @@ services:
       - "/home/irteam/data:/home/irteam/data"
       - "/home/irteam/logs:/home/irteam/logs"
   nginx:
+    build:
+      context: ./nginx
+      args:
+        ENV: "dev"
     image: pando0314/youtube-downloader-nginx
     container_name: nginx
     restart: always
