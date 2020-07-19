@@ -185,7 +185,12 @@
             });
 
             setOptions($("#res"), res_option_list);
-            $("#res").val(res_option_list[res_option_list.length / 2]);
+
+            res_option_list.forEach((option) => {
+                if (option === "720p") {
+                    $("#res").val(option);
+                }
+            });
         });
 
         $("#res").change(function () {
