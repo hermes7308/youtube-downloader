@@ -1,0 +1,21 @@
+version: "3.7"
+
+services:
+  flask:
+    image: pando0314/youtube-downloader-flask
+    container_name: flask
+    restart: always
+    expose:
+      - 5005
+    volumes:
+      - "/home/irteam/data:/home/irteam/data"
+      - "/home/irteam/logs:/home/irteam/logs"
+  nginx:
+    image: pando0314/youtube-downloader-nginx
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - "/home/irteam/data:/home/irteam/data"
+      - "/home/irteam/logs:/home/irteam/logs"
