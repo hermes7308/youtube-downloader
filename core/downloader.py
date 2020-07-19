@@ -47,7 +47,8 @@ class Downloader:
 
         if media_type == "audio":
             res = None
-        media = streams.filter(type=media_type, mime_type=mime_type, fps=fps, res=res).first()
+        filtered_streams = streams.filter(type=media_type, mime_type=mime_type, fps=fps, res=res)
+        media = filtered_streams.first()
 
         if media is None:
             return {
