@@ -4,7 +4,6 @@ click==7.1.2
 Flask==1.1.2
 itsdangerous==1.1.0
 Jinja2==2.11.2
-MarkupSafe @ file:///C:/ci/markupsafe_1594405949945/work
 python-dateutil==2.8.1
 pytube3==9.6.4
 pytz==2020.1

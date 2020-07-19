@@ -1,7 +1,5 @@
 FROM python:3.7.7-stretch
 RUN useradd -rm -d /home/irteam -s /bin/bash -g root -G sudo -u 1000 irteam
-RUN mkdir /home/irteam/data/video
-RUN mkdir /home/irteam/data/logs
 
 RUN mkdir /app
 WORKDIR /app
