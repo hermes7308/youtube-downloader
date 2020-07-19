@@ -5,9 +5,9 @@ import os
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask import render_template, request, send_from_directory
 
-from app import app
-from app.core.downloader import Downloader
-from app.core.remover import Remover
+from flask.app import app
+from downloader import Downloader
+from flask.app import Remover
 
 logging.basicConfig(level=app.config["LOGGING_LEVEL"])
 
