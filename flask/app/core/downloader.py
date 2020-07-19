@@ -91,7 +91,7 @@ class Downloader:
             "v": v,
             "yyyymmddhh": yyyymmddhh,
             "filename": seq_filename + file_extension,
-            "href": "/download-video?filename=" + seq_filename + file_extension + "&yyyymmddhh=" + yyyymmddhh,
+            "href": "/youtube/{yyyymmddhh}/{file}".format(yyyymmddhh=yyyymmddhh, file=seq_filename + file_extension),
             "saved_path": saved_path
         }
 
