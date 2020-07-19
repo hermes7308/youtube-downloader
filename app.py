@@ -35,8 +35,8 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/get-support-spec")
-def get_support_spec():
+@app.route("/get-stream-list")
+def get_stream_list():
     v = request.args.get("v")
     if v is None:
         return {
@@ -45,13 +45,10 @@ def get_support_spec():
         }
 
     url = downloader.get_youtube_url(video_id=v)
-    stream_list, type_list, fps_list, res_list = downloader.get_support_spec(url)
+    stream_list = downloader.get_stream_list(url)
     return {
         "status": "SUCCESS",
         "stream_list": stream_list,
-        "type_list": type_list,
-        "fps_list": fps_list,
-        "res_list": res_list
     }
 
 
@@ -64,11 +61,12 @@ def download():
             "message": "Url is empty."
         }
     media_type = request.args.get("media_type")
+    mime_type = request.args.get("mime_type")
     fps = int(request.args.get("fps"))
     res = request.args.get("res")
 
     try:
-        return downloader.download(v=v, fps=fps, res=res, media_type=media_type)
+        return downloader.download(v=v, media_type=media_type, mime_type=mime_type, fps=fps, res=res)
     except Exception as e:
         logging.error(e)
         return {

@@ -14,59 +14,29 @@
 <div class="container">
     <h1>Youtube downloader</h1>
 
-    <form class="form-group" id="youtube-get-support-spec-form" method="GET">
+    <form class="form-group" id="youtube-get-stream-list-form" method="GET">
         <input class="form-control" id="url" type="text" name="url"
                placeholder="https://www.youtube.com/watch?v=3icPpsf9bXk"/>
         <input class="btn" type="submit" value="Search"/>
     </form>
 
     <form class="form-group" id="youtube-download-form" method="GET" style="display: none;">
-        <input class="btn" type="button" value="Support list"
-               data-toggle="modal"
-               data-target="#support-list-modal"/>
-        <label class="youtube-download-form-select-media-type-label"> Media type
-            <select class="custom-select youtube-download-form-select-media-type"> </select>
+        <label> Media type
+            <select id="media_type" class="custom-select"> </select>
         </label>
-        <label class="youtube-download-form-select-fps-label"> FPS
-            <select class="custom-select youtube-download-form-select-fps"> </select>
+        <label> Mime_type
+            <select id="mime_type" class="custom-select"> </select>
         </label>
-        <label class="youtube-download-form-select-res-label"> RES
-            <select class="custom-select youtube-download-form-select-res"> </select>
+        <label> FPS
+            <select id="fps" class="custom-select"> </select>
+        </label>
+        <label> RES
+            <select id="res" class="custom-select"> </select>
         </label>
         <input class="btn" type="submit" value="Download"/>
     </form>
 
     <ul id="video-download-list"></ul>
-
-    <!-- Modal -->
-    <div class="modal fade" id="support-list-modal" tabindex="-1" role="dialog"
-         aria-labelledby="support-list-modal-title" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="support-list-modal-title">Modal title</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <table class="table">
-                        <thead>
-                        <th>Media type</th>
-                        <th>fps</th>
-                        <th>res</th>
-                        </thead>
-                        <tbody id="support-list-modal-tbody">
-
-                        </tbody>
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <div class="global-loader-mask">
         <div class="lds-roller">
@@ -89,116 +59,47 @@
 <script>
     $(document).ready(function () {
         let searched_video_id = null;
+        let stream_list = [];
 
-        $('select.youtube-download-form-select-media-type').change(function () {
-            if (this.value === "video") {
-                // visible
-                $(".youtube-download-form-select-fps-label").show();
-                $(".youtube-download-form-select-res-label").show();
-            } else {
-                // hide
-                $(".youtube-download-form-select-fps-label").hide();
-                $(".youtube-download-form-select-res-label").hide();
-            }
-        });
-
-        $("#youtube-get-support-spec-form").submit(function (e) {
+        $("#youtube-get-stream-list-form").submit(function (e) {
             e.preventDefault();
 
             let url = $("#url").val();
             let params = getUrlParams(url);
             if (params.v == null) {
-                alert("This is not correct Youtube url.");
+                alert("Youtube url is incorrect. Please check the url.");
                 return;
             }
 
+            searched_video_id = params.v;
             let data = {
-                v: params.v
+                v: searched_video_id
             };
 
-            $("#video-download-list").children("li").remove();
             showLoader();
             $.ajax({
                 type: "GET",
                 dataType: 'json',
                 contentType: "application/json",
-                url: "/get-support-spec",
+                url: "/get-stream-list",
                 data: data,
                 success: function (response, status, xhr) {
                     if (response.status === "SUCCESS") {
-                        let stream_list = response.stream_list.sort();
-                        let type_list = response.type_list.sort().reverse();
-                        let fps_list = response.fps_list.sort();
-                        let res_list = response.res_list.sort((a, b) => {
-                            let value1 = a.replace("p", "");
-                            let value2 = b.replace("p", "");
+                        stream_list = response.stream_list;
+                        let media_type_list = getListWithoutDuplication(stream_list.map(function (stream) {
+                            return stream.type;
+                        }));
 
-                            if (Number(value1) > Number(value2)) {
-                                return 1;
-                            }
+                        setOptions($("#media_type"), media_type_list);
 
-                            if (Number(value1) < Number(value2)) {
-                                return -1;
-                            }
-
-                            return 0;
-                        });
-
-                        {#support-list-modal-tbody#}
-                        $("#support-list-modal-tbody").children("tr").remove();
-                        let savedStreamMap = new Map();
-                        stream_list
-                            .filter(function (stream) {
-                                let key = stream.type + "_" + stream.fps + "_" + stream.res;
-                                if (savedStreamMap.has(key)) {
-                                    return false;
-                                }
-
-                                savedStreamMap.set(key, stream);
-                                return true;
-                            })
-                            .sort((a, b) => {
-                                let value1 = a.res;
-                                if (value1 != null) {
-                                    value1 = value1.replace("p", "");
-                                }
-
-                                let value2 = b.res;
-                                if (value2 != null) {
-                                    value2 = value2.replace("p", "");
-                                }
-
-                                if (Number(value1) > Number(value2)) {
-                                    return 1;
-                                }
-
-                                if (Number(value1) < Number(value2)) {
-                                    return -1;
-                                }
-
-                                return 0;
-                            })
-                            .forEach(function (stream) {
-                                $("#support-list-modal-tbody").append("<tr>"
-                                    + "<td>" + stream.type + "</td>"
-                                    + "<td>" + stream.fps + "</td>"
-                                    + "<td>" + stream.res + "</td>"
-                                    + "</tr>")
-                            });
-
-                        setOptions($(".youtube-download-form-select-media-type"), type_list);
-                        setOptions($(".youtube-download-form-select-fps"), fps_list);
-                        setOptions($(".youtube-download-form-select-res"), res_list);
-                        $(".youtube-download-form-select-res").val(res_list[res_list.length / 2]);
+                        let element = document.getElementById("media_type");
+                        element.dispatchEvent(new Event("change"));
 
                         $("#youtube-download-form").show();
-                        searched_video_id = params.v;
-
                         return;
                     }
 
                     showAlert(response.message);
-                    showAlert(response.error);
                 },
                 error: function (jqXhr, textStatus, errorMessage) {
                     showAlert(errorMessage);
@@ -207,6 +108,88 @@
                     hideLoader();
                 }
             });
+        });
+
+        $("#media_type").change(function () {
+            let media_type = $("#media_type").val();
+            if (media_type !== "video") {
+                // inactive res
+                $("#res").parent().hide()
+            } else {
+                // active
+                $("#res").parent().show()
+            }
+
+            let selected_stream_list = stream_list.filter(function (stream) {
+                return media_type === stream.type;
+            });
+            let mime_type_option_list = getListWithoutDuplication(selected_stream_list.map(function (stream) {
+                return stream.mime_type;
+            }));
+
+            setOptions($("#mime_type"), mime_type_option_list);
+
+            let element = document.getElementById("mime_type");
+            element.dispatchEvent(new Event("change"));
+        });
+
+        $("#mime_type").change(function () {
+            let media_type = $("#media_type").val();
+            let mime_type = $("#mime_type").val();
+            let selected_stream_list = stream_list
+                .filter(function (stream) {
+                    return media_type === stream.type;
+                }).filter(function (stream) {
+                    return mime_type === stream.mime_type;
+                });
+
+            let fps_option_list = getListWithoutDuplication(selected_stream_list.map(function (stream) {
+                return stream.fps;
+            }));
+
+            setOptions($("#fps"), fps_option_list);
+
+            let element = document.getElementById("fps");
+            element.dispatchEvent(new Event("change"));
+        });
+
+        $("#fps").change(function () {
+            let media_type = $("#media_type").val();
+            let mime_type = $("#mime_type").val();
+            let fps = $("#fps").val();
+            let selected_stream_list = stream_list
+                .filter(function (stream) {
+                    return media_type === stream.type;
+                }).filter(function (stream) {
+                    return mime_type === stream.mime_type;
+                }).filter(function (stream) {
+                    return fps == stream.fps;
+                });
+
+            let res_option_list = getListWithoutDuplication(selected_stream_list
+                .map(function (stream) {
+                    return stream.res;
+                })).sort((a, b) => {
+                let value1 = a.replace("p", "");
+                let value2 = b.replace("p", "");
+
+                if (Number(value1) > Number(value2)) {
+                    return 1;
+                }
+
+                if (Number(value1) < Number(value2)) {
+                    return -1;
+                }
+
+                return 0;
+            });
+
+            setOptions($("#res"), res_option_list);
+            $("#res").val(res_option_list[res_option_list.length / 2]);
+        });
+
+        $("#res").change(function () {
+            // Do nothing
         });
 
         $("#youtube-download-form").submit(function (e) {
@@ -219,9 +202,10 @@
 
             let data = {
                 v: searched_video_id,
-                media_type: $("select.youtube-download-form-select-media-type").val(),
-                fps: $("select.youtube-download-form-select-fps").val(),
-                res: $("select.youtube-download-form-select-res").val()
+                media_type: $("#media_type").val(),
+                mime_type: $("#mime_type").val(),
+                fps: $("#fps").val(),
+                res: $("#res").val()
             };
 
             $("#video-download-list").children("li").remove();
@@ -269,30 +253,43 @@
             });
             return params;
         }
-    });
 
-    function setOptions(select, options) {
-        select.children('option').remove();
+        function getListWithoutDuplication(list) {
+            let map = new Map();
+            return list.filter(function (item) {
+                if (map.has(item)) {
+                    return false;
+                }
 
-        options.forEach(function (type) {
-            select.append("<option value='" + type + "'>" + type + "</option>");
-        });
-    }
-
-    function showAlert(message) {
-        if (message != null) {
-            alert(message);
+                map.set(item, item);
+                return true;
+            })
         }
-    }
 
-    function showLoader() {
-        $("body").addClass("hide-scroll");
-        $(".global-loader-mask").css("display", "flex");
-    }
+        function setOptions(select, options) {
+            select.children('option').remove();
 
-    function hideLoader() {
-        $("body").removeClass("hide-scroll");
-        $(".global-loader-mask").css("display", "none");
-    }
+            options.forEach(function (type) {
+                select.append("<option value='" + type + "'>" + type + "</option>");
+            });
+        }
+
+        function showAlert(message) {
+            if (message != null) {
+                alert(message);
+            }
+        }
+
+        function showLoader() {
+            $("body").addClass("hide-scroll");
+            $(".global-loader-mask").css("display", "flex");
+        }
+
+        function hideLoader() {
+            $("body").removeClass("hide-scroll");
+            $(".global-loader-mask").css("display", "none");
+        }
+    })
+    ;
 </script>
 </html>

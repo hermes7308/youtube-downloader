@@ -25,20 +25,20 @@ label {
     color: #ff5555;
 }
 
-#youtube-get-support-spec-form {
+#youtube-get-stream-list-form {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     width: 100%;
 }
 
-#youtube-get-support-spec-form > input[type='text'] {
+#youtube-get-stream-list-form > input[type='text'] {
     display: inline-block;
     flex-grow: 1;
     width: calc(100% - 98px);
 }
 
-#youtube-get-support-spec-form > input[type='submit'] {
+#youtube-get-stream-list-form > input[type='submit'] {
     width: 98px;
 }
 

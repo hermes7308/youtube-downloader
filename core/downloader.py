@@ -16,13 +16,8 @@ class Downloader:
     def get_youtube_url(self, video_id):
         return "https://www.youtube.com/watch?v={video_id}".format(video_id=video_id)
 
-    def get_support_spec(self, url):
-        print(YouTube(url).streams.filter(fps=30, res="480p", type="video", file_extension="mp4").first())
-
+    def get_stream_list(self, url):
         stream_list = []
-        type_list = []
-        fps_list = []
-        res_list = []
         for stream in YouTube(url).streams:
             stream_list.append({
                 "itag": stream.itag,
@@ -35,20 +30,13 @@ class Downloader:
                 "type": stream.type
             })
 
-            if stream.type is not None:
-                type_list.append(stream.type)
-            if stream.fps is not None:
-                fps_list.append(stream.fps)
-            if stream.resolution is not None:
-                res_list.append(stream.resolution)
-
-        return stream_list, list(set(type_list)), list(set(fps_list)), list(set(res_list))
+        return stream_list
 
     # v: video_id
     # fps: 30fps, 60fps
     # res: 360p 480p, 720p 1080p
     # type: # video, audio
-    def download(self, v, fps=30, res="360p", media_type="video"):
+    def download(self, v, media_type=None, mime_type=None, fps=None, res=None):
         yyyymmdd = time.strftime('%Y%m%d')
         save_home = os.path.join(self.output_path, yyyymmdd)
         if not os.path.exists(save_home):
@@ -57,10 +45,9 @@ class Downloader:
         url = self.get_youtube_url(v)
         streams = YouTube(url).streams
 
-        if media_type == "video":
-            media = streams.filter(fps=fps, res=res, type=media_type, file_extension="mp4").first()
-        else:  # audio
-            media = streams.filter(type=media_type).first()
+        if media_type == "audio":
+            res = None
+        media = streams.filter(type=media_type, mime_type=mime_type, fps=fps, res=res).first()
 
         if media is None:
             return {
