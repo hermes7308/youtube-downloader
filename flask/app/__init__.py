@@ -10,4 +10,4 @@ elif app.config["ENV"] == "dev":
 else:
     app.config.from_object("config.LocalConfig")
 
-from flask.app import views
+from app import views
