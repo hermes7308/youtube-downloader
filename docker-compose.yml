@@ -6,6 +6,7 @@ services:
       context: ./flask
       args:
         ENV: "dev"
+    image: pando0314/youtube-downloader-flask
     container_name: flask
     restart: always
     expose:
@@ -18,6 +19,7 @@ services:
       context: ./nginx
       args:
         ENV: "dev"
+    image: pando0314/youtube-downloader-nginx
     container_name: nginx
     restart: always
     ports:
