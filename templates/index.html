@@ -76,6 +76,7 @@
                 v: searched_video_id
             };
 
+            $("#video-download-list").children("li").remove();
             showLoader();
             $.ajax({
                 type: "GET",
@@ -213,7 +214,6 @@
                 res: $("#res").val()
             };
 
-            $("#video-download-list").children("li").remove();
             showLoader();
             $.ajax({
                 type: "GET",
