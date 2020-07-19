@@ -8,11 +8,13 @@ class Config(object):
 
 
 class ReleaseConfig(Config):
-    pass
+
+    HOME_PATH = "/home/irteam/data/youtube"
 
 
 class DevelopConfig(Config):
-    pass
+
+    HOME_PATH = "/home/irteam/data/youtube"
 
 
 class LocalConfig(Config):
