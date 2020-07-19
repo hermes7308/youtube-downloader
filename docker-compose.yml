@@ -2,18 +2,22 @@ version: "3.7"
 
 services:
   flask:
-    build: ./flask
+    build:
+      context: ./flask
+      args:
+        - ENV: dev
     container_name: flask
     restart: always
-    environment:
-      - ENV=dev
     expose:
       - 5005
     volumes:
-      -  "/home/irteam/data:/home/irteam/data"
-      -  "/home/irteam/logs:/home/irteam/logs"
+      - "/home/irteam/data:/home/irteam/data"
+      - "/home/irteam/logs:/home/irteam/logs"
   nginx:
-    build: ./nginx
+    build:
+      context: ./nginx
+      args:
+        - ENV: dev
     container_name: nginx
     restart: always
     environment:
