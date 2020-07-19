@@ -18,7 +18,9 @@ You can download Youtube video using "Youtube downloader".
 
 ## Points to note when developing
 ```
-# app.py
-# set the downloaded video file
-home_path = "/home/youtube" 
+# set the downloaded video file in config.py
+
+> set FLASK_APP=run.py
+> set FLASK_ENV={release, dev, local}
+> flask run
 ``` 

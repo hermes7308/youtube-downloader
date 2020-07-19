@@ -37,8 +37,8 @@ class Downloader:
     # res: 360p 480p, 720p 1080p
     # type: # video, audio
     def download(self, v, media_type=None, mime_type=None, fps=None, res=None):
-        yyyymmdd = time.strftime('%Y%m%d')
-        save_home = os.path.join(self.output_path, yyyymmdd)
+        yyyymmddhh = time.strftime('%Y%m%d%H')
+        save_home = os.path.join(self.output_path, yyyymmddhh)
         if not os.path.exists(save_home):
             os.makedirs(save_home)
 
@@ -61,7 +61,12 @@ class Downloader:
                 "error": "NOT_FOUND_EXCEPTION"
             }
 
-        seq_filename, file_extension = self.get_seq_filename(save_home, media.default_filename)
+        filename, file_extension = os.path.splitext(media.default_filename)
+        filename = "{filename}_{media_type}_{fps}fps_{res}{file_extension}".format(filename=filename,
+                                                                                   media_type=media_type,
+                                                                                   fps=fps, res=res,
+                                                                                   file_extension=file_extension)
+        seq_filename, file_extension = self.get_seq_filename(save_home, filename)
 
         logging.info(
             "[Youtube Downloader] Start to download youtube media."
@@ -84,9 +89,9 @@ class Downloader:
         return {
             "status": "SUCCESS",
             "v": v,
-            "yyyymmdd": yyyymmdd,
+            "yyyymmddhh": yyyymmddhh,
             "filename": seq_filename + file_extension,
-            "href": "/download-video?filename=" + seq_filename + file_extension + "&yyyymmdd=" + yyyymmdd,
+            "href": "/download-video?filename=" + seq_filename + file_extension + "&yyyymmddhh=" + yyyymmddhh,
             "saved_path": saved_path
         }
 

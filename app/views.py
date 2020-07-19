@@ -3,19 +3,16 @@ import logging
 import os
 
 from apscheduler.schedulers.background import BackgroundScheduler
-from flask import Flask, render_template, request, send_from_directory
+from flask import render_template, request, send_from_directory
 
-from core.downloader import Downloader
-from core.remover import Remover
+from app import app
+from app.core.downloader import Downloader
+from app.core.remover import Remover
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=app.config["LOGGING_LEVEL"])
 
-app = Flask(__name__)
-
-home_path = "C:\\Users\\herme\\Desktop\\video\\youtube"
-
-downloader = Downloader(home_path)
-remover = Remover(home_path)
+downloader = Downloader(app.config["HOME_PATH"])
+remover = Remover(app.config["HOME_PATH"])
 
 
 def remove_video_job():
@@ -23,7 +20,7 @@ def remove_video_job():
 
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(func=remove_video_job, trigger="interval", seconds=3600)
+scheduler.add_job(func=remove_video_job, trigger="interval", seconds=600)
 scheduler.start()
 
 # Shut down the scheduler when exiting the app
@@ -68,7 +65,7 @@ def download():
     try:
         return downloader.download(v=v, media_type=media_type, mime_type=mime_type, fps=fps, res=res)
     except Exception as e:
-        logging.error(e)
+        app.logger.error(e)
         return {
             "status": "FAIL",
             "message": "Couldn't download this video",
@@ -78,12 +75,10 @@ def download():
 
 @app.route("/download-video", methods=["GET"])
 def download_video():
-    yyyymmdd = request.args.get("yyyymmdd")
+    yyyymmddhh = request.args.get("yyyymmddhh")
     filename = request.args.get("filename")
-    directory = os.path.join(home_path, yyyymmdd)
+    directory = os.path.join(app.config["HOME_PATH"], yyyymmddhh)
+
+    app.logger.info("Directory path: " + directory)
 
     return send_from_directory(directory, filename)
-
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5004)

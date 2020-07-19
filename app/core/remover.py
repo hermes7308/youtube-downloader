@@ -8,11 +8,11 @@ class Remover:
         self.home_path = home_path
 
     def remove(self):
-        yyyymmdd = (datetime.now() - timedelta(1)).strftime('%Y%m%d')
+        yyyymmddhh = (datetime.now() - timedelta(hours=1)).strftime('%Y%m%d%H')
 
         for directory in os.listdir(self.home_path):
             # Delete past directory
-            if directory <= yyyymmdd:
+            if directory < yyyymmddhh:
                 directory_path = os.path.join(self.home_path, directory)
 
                 logging.info(
