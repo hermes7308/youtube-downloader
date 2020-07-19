@@ -3,9 +3,8 @@ RUN useradd -rm -d /home/irteam -s /bin/bash -g root -G sudo -u 1000 irteam
 
 ARG ENV
 RUN export FLASK_ENV=$ENV
+RUN echo $ENV
 RUN export FLASK_APP=run.py
-RUN echo $FLASK_ENV
-RUN echo $FLASK_APP
 
 RUN mkdir /app
 WORKDIR /app
