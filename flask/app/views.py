@@ -1,12 +1,10 @@
 import atexit
-import os
-
-from apscheduler.schedulers.background import BackgroundScheduler
-from flask import render_template, request, send_from_directory
 
 from app import app
 from app.core.downloader import Downloader
 from app.core.remover import Remover
+from apscheduler.schedulers.background import BackgroundScheduler
+from flask import render_template, request
 
 downloader = Downloader(app.config["HOME_PATH"])
 remover = Remover(app.config["HOME_PATH"])
@@ -68,14 +66,3 @@ def download():
             "message": "Couldn't download this video",
             "error": str(e)
         }
-
-
-@app.route("/download-video", methods=["GET"])
-def download_video():
-    yyyymmddhh = request.args.get("yyyymmddhh")
-    filename = request.args.get("filename")
-    directory = os.path.join(app.config["HOME_PATH"], yyyymmddhh)
-
-    app.logger.info("Directory path: " + directory)
-
-    return send_from_directory(directory, filename)
