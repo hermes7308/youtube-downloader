@@ -8,6 +8,6 @@ RUN pip3 install -r requirements.txt
 
 ARG ENV
 ENV FLASK_ENV $ENV
-ENV FLASK_APP /app/run.py
+ENV FLASK_APP=/app/run.py
 
-CMD ["uwsgi", "app.ini"]
+CMD ["nohup", "python3", "run.py", ">", "/home/irteam/logs/youtube-downloader.output.log", "&"]
