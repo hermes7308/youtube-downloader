@@ -111,6 +111,10 @@
             });
         });
 
+        $("#url").change(function () {
+            $("#youtube-download-form").hide();
+        });
+
         $("#media_type").change(function () {
             let media_type = $("#media_type").val();
             if (media_type !== "video") {
