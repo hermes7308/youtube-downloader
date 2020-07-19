@@ -10,4 +10,4 @@ ARG ENV
 ENV FLASK_ENV $ENV
 ENV FLASK_APP /app/run.py
 
-CMD ["flask", "run"]
+CMD ["uwsgi", "app.ini"]
