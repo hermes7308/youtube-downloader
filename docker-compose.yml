@@ -5,7 +5,7 @@ services:
     build:
       context: ./flask
       args:
-        - ENV: "dev"
+        ENV: "dev"
     container_name: flask
     restart: always
     expose:
@@ -17,11 +17,9 @@ services:
     build:
       context: ./nginx
       args:
-        - ENV: "dev"
+        ENV: "dev"
     container_name: nginx
     restart: always
-    environment:
-      - ENV=dev
     ports:
       - "80:80"
     volumes:
