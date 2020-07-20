@@ -1,4 +1,5 @@
 import atexit
+import logging
 
 from app import app
 from app.core.downloader import Downloader
@@ -37,11 +38,18 @@ def get_stream_list():
         }
 
     url = downloader.get_youtube_url(video_id=v)
-    stream_list = downloader.get_stream_list(url)
-    return {
-        "status": "SUCCESS",
-        "stream_list": stream_list,
-    }
+    try:
+        stream_list = downloader.get_stream_list(url)
+        return {
+            "status": "SUCCESS",
+            "stream_list": stream_list,
+        }
+    except Exception as e:
+        logging.error("This is block download. exception: {e}".format(e=e))
+        return {
+            "status": "FAIL",
+            "message": "Sorry, this youtube is block to download."
+        }
 
 
 @app.route("/download", methods=["GET"])
