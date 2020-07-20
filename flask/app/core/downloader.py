@@ -18,7 +18,7 @@ class Downloader:
 
     def get_stream_list(self, url):
         stream_list = []
-        for stream in YouTube(url).streams.filter(progressive=True):
+        for stream in YouTube(url).streams.filter():
             stream_list.append({
                 "itag": stream.itag,
                 "mime_type": stream.mime_type,
@@ -26,7 +26,7 @@ class Downloader:
                 "fps": stream.fps,
                 "vcodec": stream.video_codec,
                 "acodec": stream.audio_codec,
-                "progressive": stream.is_progressive,
+                "is_progressive": stream.is_progressive and "Y" or "N",
                 "type": stream.type
             })
 

@@ -62,8 +62,8 @@ body * {
     padding-right: 5px
 }
 
-#youtube-download-form > div > select {
-    width: 130px;
+#youtube-download-form select {
+    text-align-last: center;
 }
 
 .btn {
@@ -122,14 +122,14 @@ body * {
 
 @media (min-width: 1000px) {
     #youtube-download-form > div > div {
-        width: 25%;
+        width: 20%;
     }
 
     #youtube-download-form label {
         font-size: 18px;
     }
 
-    #youtube-download-form > div > div:first-child {
+    #youtube-download-form > div > div:nth-child(2) -child {
         padding-left: 0;
     }
 
@@ -152,11 +152,17 @@ body * {
     }
 
     #youtube-download-form > div > div:nth-child(even) {
-        padding-right: 0;
+        padding-left: 0;
     }
 
     #youtube-download-form > div > div:nth-child(odd) {
+        padding-right: 0;
+    }
+
+    #youtube-download-form > div > div:first-child {
+        width: 100%;
         padding-left: 0;
+        padding-right: 0;
     }
 }
 

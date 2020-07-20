@@ -38,6 +38,10 @@
     <form class="form-group" id="youtube-download-form" method="GET" style="display: none;">
         <div>
             <div>
+                <label for="is_progressive"> Integrated file </label>
+                <select id="is_progressive" class="custom-select"> </select>
+            </div>
+            <div>
                 <label for="media_type"> Media type </label>
                 <select id="media_type" class="custom-select"> </select>
             </div>
@@ -104,7 +108,6 @@
         let itag = null;
 
         $("#youtube-get-stream-list-form").submit(function (e) {
-            console.log(e);
             e.preventDefault();
 
             let url = $("#url").val();
@@ -129,13 +132,13 @@
                 success: function (response, status, xhr) {
                     if (response.status === "SUCCESS") {
                         stream_list = response.stream_list;
-                        let media_type_list = getListWithoutDuplication(stream_list.map(function (stream) {
-                            return stream.type;
+                        let is_progressive_list = getListWithoutDuplication(stream_list.map(function (stream) {
+                            return stream.is_progressive;
                         }));
 
-                        setOptions($("#media_type"), media_type_list);
+                        setOptions($("#is_progressive"), is_progressive_list);
 
-                        let element = document.getElementById("media_type");
+                        let element = document.getElementById("is_progressive");
                         element.dispatchEvent(new Event("change"));
 
                         $("#youtube-download-form").show();
@@ -158,6 +161,20 @@
             $("#video-download-list").children("li").remove();
         });
 
+        $("#is_progressive").change(function () {
+            let selected_stream_list = stream_list.filter(function (stream) {
+                return $("#is_progressive").val() === stream.is_progressive;
+            });
+            let media_type_list = getListWithoutDuplication(selected_stream_list.map(function (stream) {
+                return stream.type;
+            }));
+
+            setOptions($("#media_type"), media_type_list);
+
+            let element = document.getElementById("media_type");
+            element.dispatchEvent(new Event("change"));
+        });
+
         $("#media_type").change(function () {
             if ($("#media_type").val() !== "video") {
                 // inactive res
@@ -167,9 +184,12 @@
                 $("#res").parent().show()
             }
 
-            let selected_stream_list = stream_list.filter(function (stream) {
-                return $("#media_type").val() === stream.type;
-            });
+            let selected_stream_list = stream_list
+                .filter(function (stream) {
+                    return $("#is_progressive").val() === stream.is_progressive;
+                }).filter(function (stream) {
+                    return $("#media_type").val() === stream.type;
+                });
             let mime_type_option_list = getListWithoutDuplication(selected_stream_list.map(function (stream) {
                 return stream.mime_type;
             }));
@@ -182,6 +202,9 @@
 
         $("#mime_type").change(function () {
             let selected_stream_list = stream_list
+                .filter(function (stream) {
+                    return $("#is_progressive").val() === stream.is_progressive;
+                })
                 .filter(function (stream) {
                     return $("#media_type").val() === stream.type;
                 }).filter(function (stream) {
@@ -201,6 +224,8 @@
         $("#fps").change(function () {
             let selected_stream_list = stream_list
                 .filter(function (stream) {
+                    return $("#is_progressive").val() === stream.is_progressive;
+                }).filter(function (stream) {
                     return $("#media_type").val() === stream.type;
                 }).filter(function (stream) {
                     return $("#mime_type").val() === stream.mime_type;
@@ -249,6 +274,8 @@
         $("#res").change(function () {
             let selected_stream_list = stream_list
                 .filter(function (stream) {
+                    return $("#is_progressive").val() === stream.is_progressive;
+                }).filter(function (stream) {
                     return $("#media_type").val() === stream.type;
                 }).filter(function (stream) {
                     return $("#mime_type").val() === stream.mime_type;

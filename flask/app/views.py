@@ -66,10 +66,9 @@ def download():
     try:
         return downloader.download(url=url, itag=itag)
     except Exception as e:
-
         logging.error("Couldn't download this video: {e}".format(e=e))
         return {
             "status": "FAIL",
-            "message": "Couldn't download this video",
+            "message": "Sorry, Youtube block this video to download.",
             "error": str(e)
         }
