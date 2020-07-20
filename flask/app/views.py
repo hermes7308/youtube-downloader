@@ -56,19 +56,12 @@ def get_stream_list():
 @app.route("/download", methods=["GET"])
 def download():
     v = request.args.get("v")
-    if v is None:
-        return {
-            "status": "FAIL",
-            "message": "Url is empty."
-        }
-    media_type = request.args.get("media_type")
-    mime_type = request.args.get("mime_type")
-    fps = int(request.args.get("fps"))
-    res = request.args.get("res")
+    itag = int(request.args.get("itag"))
 
     try:
-        return downloader.download(v=v, media_type=media_type, mime_type=mime_type, fps=fps, res=res)
+        return downloader.download(v=v, itag=itag)
     except Exception as e:
+
         logging.error("Couldn't download this video: {e}".format(e=e))
         return {
             "status": "FAIL",

@@ -18,7 +18,7 @@ class Downloader:
 
     def get_stream_list(self, url):
         stream_list = []
-        for stream in YouTube(url).streams:
+        for stream in YouTube(url).streams.filter(progressive=True):
             stream_list.append({
                 "itag": stream.itag,
                 "mime_type": stream.mime_type,
@@ -36,35 +36,30 @@ class Downloader:
     # fps: 30fps, 60fps
     # res: 360p 480p, 720p 1080p
     # type: # video, audio
-    def download(self, v, media_type=None, mime_type=None, fps=None, res=None):
+    def download(self, v, itag):
         yyyymmddhh = time.strftime('%Y%m%d%H')
         save_home = os.path.join(self.output_path, yyyymmddhh)
         if not os.path.exists(save_home):
             os.makedirs(save_home)
 
         url = self.get_youtube_url(v)
-        streams = YouTube(url).streams
-
-        if media_type == "audio":
-            res = None
-        filtered_streams = streams.filter(type=media_type, mime_type=mime_type, fps=fps, res=res)
-        media = filtered_streams.first()
+        media = YouTube(url).streams.get_by_itag(itag)
 
         if media is None:
             return {
                 "status": "FAIL",
                 "message": "Couldn't find the youtube media. Please check media spec."
                            " url: {url}, media_type: {media_type}, fps: {fps}, res: {res}".format(url=url,
-                                                                                                  media_type=media_type,
-                                                                                                  fps=fps,
-                                                                                                  res=res),
+                                                                                                  media_type=media.type,
+                                                                                                  fps=media.fps,
+                                                                                                  res=media.res),
                 "error": "NOT_FOUND_EXCEPTION"
             }
 
         filename, file_extension = os.path.splitext(media.default_filename)
         filename = "{filename}_{media_type}_{fps}fps_{res}{file_extension}".format(filename=filename,
-                                                                                   media_type=media_type,
-                                                                                   fps=fps, res=res,
+                                                                                   media_type=media.type,
+                                                                                   fps=media.fps, res=media.resolution,
                                                                                    file_extension=file_extension)
         seq_filename, file_extension = self.get_seq_filename(save_home, filename)
 
@@ -73,7 +68,7 @@ class Downloader:
             ", filename: {seq_filename}"
             ", media_type: {media_type}, fps: {fps}, res: {res}"
             ", filesize: {filesize} MB".format(seq_filename=seq_filename
-                                               , media_type=media_type, fps=fps, res=res
+                                               , media_type=media.type, fps=media.fps, res=media.resolution
                                                , filesize=round(media.filesize / 1024 / 1024, 2)))
 
         saved_path = media.download(output_path=save_home, filename=seq_filename)
@@ -83,7 +78,7 @@ class Downloader:
             ", filename: {seq_filename}"
             ", media_type: {media_type}, fps: {fps}, res: {res}"
             ", filesize: {filesize} MB".format(seq_filename=seq_filename
-                                               , media_type=media_type, fps=fps, res=res
+                                               , media_type=media.type, fps=media.fps, res=media.resolution
                                                , filesize=round(media.filesize / 1024 / 1024, 2)))
 
         return {

@@ -61,6 +61,7 @@
     $(document).ready(function () {
         let searched_video_id = null;
         let stream_list = [];
+        let itag = null;
 
         $("#youtube-get-stream-list-form").submit(function (e) {
             e.preventDefault();
@@ -88,6 +89,11 @@
                 success: function (response, status, xhr) {
                     if (response.status === "SUCCESS") {
                         stream_list = response.stream_list;
+                        if (stream_list == null || stream_list.length === 0) {
+                            showAlert("Youtube not support this video to download");
+                            return;
+                        }
+
                         let media_type_list = getListWithoutDuplication(stream_list.map(function (stream) {
                             return stream.type;
                         }));
@@ -117,8 +123,7 @@
         });
 
         $("#media_type").change(function () {
-            let media_type = $("#media_type").val();
-            if (media_type !== "video") {
+            if ($("#media_type").val() !== "video") {
                 // inactive res
                 $("#res").parent().hide()
             } else {
@@ -127,7 +132,7 @@
             }
 
             let selected_stream_list = stream_list.filter(function (stream) {
-                return media_type === stream.type;
+                return $("#media_type").val() === stream.type;
             });
             let mime_type_option_list = getListWithoutDuplication(selected_stream_list.map(function (stream) {
                 return stream.mime_type;
@@ -140,13 +145,11 @@
         });
 
         $("#mime_type").change(function () {
-            let media_type = $("#media_type").val();
-            let mime_type = $("#mime_type").val();
             let selected_stream_list = stream_list
                 .filter(function (stream) {
-                    return media_type === stream.type;
+                    return $("#media_type").val() === stream.type;
                 }).filter(function (stream) {
-                    return mime_type === stream.mime_type;
+                    return $("#mime_type").val() === stream.mime_type;
                 });
 
             let fps_option_list = getListWithoutDuplication(selected_stream_list.map(function (stream) {
@@ -160,16 +163,13 @@
         });
 
         $("#fps").change(function () {
-            let media_type = $("#media_type").val();
-            let mime_type = $("#mime_type").val();
-            let fps = $("#fps").val();
             let selected_stream_list = stream_list
                 .filter(function (stream) {
-                    return media_type === stream.type;
+                    return $("#media_type").val() === stream.type;
                 }).filter(function (stream) {
-                    return mime_type === stream.mime_type;
+                    return $("#mime_type").val() === stream.mime_type;
                 }).filter(function (stream) {
-                    return fps == stream.fps;
+                    return $("#fps").val() == stream.fps;
                 });
 
             let res_option_list = getListWithoutDuplication(selected_stream_list
@@ -202,31 +202,42 @@
 
             if (has720p) {
                 $("#res").val("720p");
-                return;
-            }
-            if (res_option_list.length > 0) {
+            } else if (res_option_list.length > 0) {
                 $("#res").val(res_option_list[0]);
             }
+
+            let element = document.getElementById("res");
+            element.dispatchEvent(new Event("change"));
         });
 
         $("#res").change(function () {
-            // Do nothing
+            let selected_stream_list = stream_list
+                .filter(function (stream) {
+                    return $("#media_type").val() === stream.type;
+                }).filter(function (stream) {
+                    return $("#mime_type").val() === stream.mime_type;
+                }).filter(function (stream) {
+                    return $("#fps").val() == stream.fps;
+                }).filter(function (stream) {
+                    return $("#res").val() === stream.res;
+                });
+
+            if (selected_stream_list.length > 0) {
+                itag = selected_stream_list[0].itag;
+            }
         });
 
         $("#youtube-download-form").submit(function (e) {
             e.preventDefault();
 
-            if (searched_video_id == null) {
+            if (searched_video_id == null || itag == null) {
                 alert("Please search youtube media that you want to download.");
                 return;
             }
 
             let data = {
                 v: searched_video_id,
-                media_type: $("#media_type").val(),
-                mime_type: $("#mime_type").val(),
-                fps: $("#fps").val(),
-                res: $("#res").val()
+                itag: itag
             };
 
             showLoader();
