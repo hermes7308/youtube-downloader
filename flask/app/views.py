@@ -68,7 +68,7 @@ def download():
     try:
         return downloader.download(v=v, media_type=media_type, mime_type=mime_type, fps=fps, res=res)
     except Exception as e:
-        logging.error(e)
+        logging.error("Couldn't download this video: {e}".format(e=e))
         return {
             "status": "FAIL",
             "message": "Couldn't download this video",
