@@ -36,15 +36,13 @@ class Downloader:
     # fps: 30fps, 60fps
     # res: 360p 480p, 720p 1080p
     # type: # video, audio
-    def download(self, v, itag):
+    def download(self, url, itag):
         yyyymmddhh = time.strftime('%Y%m%d%H')
         save_home = os.path.join(self.output_path, yyyymmddhh)
         if not os.path.exists(save_home):
             os.makedirs(save_home)
 
-        url = self.get_youtube_url(v)
         media = YouTube(url).streams.get_by_itag(itag)
-
         if media is None:
             return {
                 "status": "FAIL",
@@ -83,7 +81,7 @@ class Downloader:
 
         return {
             "status": "SUCCESS",
-            "v": v,
+            "youtube_url": url,
             "yyyymmddhh": yyyymmddhh,
             "filename": seq_filename + file_extension,
             "href": "/youtube/{yyyymmddhh}/{file}".format(yyyymmddhh=yyyymmddhh, file=seq_filename + file_extension),

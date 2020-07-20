@@ -30,20 +30,25 @@ def index():
 
 @app.route("/get-stream-list")
 def get_stream_list():
-    v = request.args.get("v")
-    if v is None:
+    url = request.args.get("url")
+    if url is None:
         return {
             "status": "FAIL",
             "message": "Url is empty."
         }
 
-    url = downloader.get_youtube_url(video_id=v)
     try:
         stream_list = downloader.get_stream_list(url)
-        return {
-            "status": "SUCCESS",
-            "stream_list": stream_list,
-        }
+        if stream_list is None or len(stream_list) is 0:
+            return {
+                "status": "FAIL",
+                "message": "{url} is incorrect. Please check the url.".format(url=url)
+            }
+        else:
+            return {
+                "status": "SUCCESS",
+                "stream_list": stream_list,
+            }
     except Exception as e:
         logging.error("Blocked download. exception: {e}".format(e=e))
         return {
@@ -55,11 +60,11 @@ def get_stream_list():
 
 @app.route("/download", methods=["GET"])
 def download():
-    v = request.args.get("v")
+    url = request.args.get("url")
     itag = int(request.args.get("itag"))
 
     try:
-        return downloader.download(v=v, itag=itag)
+        return downloader.download(url=url, itag=itag)
     except Exception as e:
 
         logging.error("Couldn't download this video: {e}".format(e=e))

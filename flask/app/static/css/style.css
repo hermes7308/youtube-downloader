@@ -62,14 +62,6 @@ body * {
     padding-right: 5px
 }
 
-#youtube-download-form > div > div:first-child {
-    padding-left: 0;
-}
-
-#youtube-download-form > div > div:last-child {
-    padding-right: 0;
-}
-
 #youtube-download-form > div > select {
     width: 130px;
 }
@@ -105,6 +97,14 @@ body * {
     #youtube-download-form label {
         font-size: 18px;
     }
+
+    #youtube-download-form > div > div:first-child {
+        padding-left: 0;
+    }
+
+    #youtube-download-form > div > div:last-child {
+        padding-right: 0;
+    }
 }
 
 @media (max-width: 1000px) {
@@ -118,6 +118,14 @@ body * {
 
     #youtube-download-form label {
         font-size: 17px;
+    }
+
+    #youtube-download-form > div > div:nth-child(even) {
+        padding-left: 0;
+    }
+
+    #youtube-download-form > div > div:nth-child(odd) {
+        padding-right: 0;
     }
 }
 

@@ -64,7 +64,7 @@
         crossorigin="anonymous"></script>
 <script>
     $(document).ready(function () {
-        let searched_video_id = null;
+        let searched_url = null;
         let stream_list = [];
         let itag = null;
 
@@ -72,15 +72,14 @@
             e.preventDefault();
 
             let url = $("#url").val();
-            let params = getUrlParams(url);
-            if (params.v == null) {
+            if (!isValidURL(url)) {
                 alert("Youtube url is incorrect. Please check the url.");
                 return;
             }
 
-            searched_video_id = params.v;
+            searched_url = url;
             let data = {
-                v: searched_video_id
+                url: searched_url
             };
 
             $("#video-download-list").children("li").remove();
@@ -94,11 +93,6 @@
                 success: function (response, status, xhr) {
                     if (response.status === "SUCCESS") {
                         stream_list = response.stream_list;
-                        if (stream_list == null || stream_list.length === 0) {
-                            showAlert("Youtube not support this video to download");
-                            return;
-                        }
-
                         let media_type_list = getListWithoutDuplication(stream_list.map(function (stream) {
                             return stream.type;
                         }));
@@ -235,13 +229,13 @@
         $("#youtube-download-form").submit(function (e) {
             e.preventDefault();
 
-            if (searched_video_id == null || itag == null) {
+            if (!isValidURL(searched_url) || itag == null) {
                 alert("Please search youtube media that you want to download.");
                 return;
             }
 
             let data = {
-                v: searched_video_id,
+                url: searched_url,
                 itag: itag
             };
 
@@ -288,6 +282,16 @@
                 params[key] = value;
             });
             return params;
+        }
+
+        function isValidURL(str) {
+            const pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
+                '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+                '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+                '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+                '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+                '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
+            return !!pattern.test(str);
         }
 
         function getListWithoutDuplication(list) {
