@@ -119,6 +119,7 @@
 
         $("#url").change(function () {
             $("#youtube-download-form").hide();
+            $("#video-download-list").children("li").remove();
         });
 
         $("#media_type").change(function () {
@@ -275,14 +276,6 @@
                 }
             })
         });
-
-        function getUrlParams(url) {
-            let params = {};
-            url.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (str, key, value) {
-                params[key] = value;
-            });
-            return params;
-        }
 
         function isValidURL(str) {
             const pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
