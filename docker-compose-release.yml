@@ -5,7 +5,7 @@ services:
     build:
       context: ./flask
       args:
-        ENV: "release"
+        ENV: "dev"
     image: pando0314/youtube-downloader-flask
     container_name: flask
     restart: always
@@ -18,13 +18,12 @@ services:
     build:
       context: ./nginx
       args:
-        ENV: "release"
+        ENV: "dev"
     image: pando0314/youtube-downloader-nginx
     container_name: nginx
     restart: always
     ports:
-      - 127.0.0.1:80:80
-      - 127.0.0.1:443:443
+      - 443:443
     volumes:
       - "/home/irteam/data:/home/irteam/data"
       - "/home/irteam/logs:/home/irteam/logs"
