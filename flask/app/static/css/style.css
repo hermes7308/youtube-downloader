@@ -88,6 +88,37 @@ body * {
     font-size: 20px;
 }
 
+.banner {
+    width: 100%;
+    text-align: center;
+}
+
+.header-banner {
+    margin-bottom: 100px;
+}
+
+.footer-banner {
+    margin-top: 100px;
+}
+
+.ad-banner {
+    display: none;
+    width: 100%;
+    text-align: center;
+}
+
+@media (min-width: 468px) and (max-width: 728px) {
+    .w-banner-468 {
+        display: block;
+    }
+}
+
+@media (min-width: 728px) {
+    .w-banner-728 {
+        display: block;
+    }
+}
+
 
 @media (min-width: 1000px) {
     #youtube-download-form > div > div {

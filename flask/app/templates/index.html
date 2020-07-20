@@ -13,19 +13,21 @@
 </head>
 <body>
 <div class="container">
-    {#  Google Ad horizontality 01  #}
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <!-- www.youtubedownloadsupport.com_horizontality_01 -->
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-5539737498268274"
-         data-ad-slot="3704608073"
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
-    <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-    {#  Google Ad horizontality 01  #}
+    <div class="banner header-banner">
+        {#  Amazon Ad - Banner Links For Ez 728 x 90 #}
+        <div class="ad-banner w-banner-728">
+            <iframe src="//rcm-na.amazon-adsystem.com/e/cm?o=1&p=48&l=ez&f=ifr&linkID=84a1029b91a8cc6a46291a805c48a3d2&t=youtubedown0f-20&tracking_id=youtubedown0f-20" width="728"
+                    height="90" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
+        </div>
+        {#  Amazon Ad - Banner Links For Ez 728 x 90 #}
+        {#  Amazon Ad - Banner Links For Ez 468 x 60 #}
+        <div class="ad-banner w-banner-468">
+            <iframe src="//rcm-na.amazon-adsystem.com/e/cm?o=1&p=13&l=ez&f=ifr&linkID=2a711cf03276b4f1a0cc37c022403678&t=youtubedown0f-20&tracking_id=youtubedown0f-20" width="468"
+                    height="60" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
+        </div>
+        {#  Amazon Ad - Banner Links For Ez 468 x 60 #}
+    </div>
+
     <h1>Youtube downloader</h1>
     <form class="form-group" id="youtube-get-stream-list-form" method="GET">
         <input class="form-control" id="url" type="text" name="url"
@@ -56,19 +58,26 @@
 
     <ul id="video-download-list"></ul>
 
-    {#  Google Ad horizontality 02  #}
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <!-- www.youtubedownloadsupport.com_horizontality_02 -->
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-5539737498268274"
-         data-ad-slot="1597211684"
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
-    <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-    {#  Google Ad horizontality 02  #}
+    <div class="banner footer-banner">
+        {#  Amazon Ad - Banner Links For Gift Cards 728 x 90 #}
+        <div class="ad-banner w-banner-728">
+            <iframe src="//rcm-na.amazon-adsystem.com/e/cm?o=1&p=48&l=ur1&category=gift_certificates&banner=1G274HKHXM7QERC7YAG2&f=ifr&linkID=00c88af11de542e27cbcce473cbe994c&t=youtubedown0f-20&tracking_id=youtubedown0f-20"
+                    width="728" height="90" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
+        </div>
+        {#  Amazon Ad - Banner Links For Gift Cards 728 x 90 #}
+        {#  Amazon Ad -  Banner Links For Music & Entertainment 728 x 90 #}
+        <div class="ad-banner w-banner-728">
+            <iframe src="//rcm-na.amazon-adsystem.com/e/cm?o=1&p=48&l=ur1&category=musicandentertainmentrot&f=ifr&linkID=3876e68e9fa0204629b1b2df3fb947ce&t=youtubedown0f-20&tracking_id=youtubedown0f-20"
+                    width="728" height="90" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
+        </div>
+        {#  Amazon Ad -  Banner Links For Music & Entertainment 728 x 90 #}
+        {#  Amazon Ad - Banner Links For Home Page Link (2016) 468 x 60 #}
+        <div class="ad-banner w-banner-468">
+            <iframe src="//rcm-na.amazon-adsystem.com/e/cm?o=1&p=26&l=ur1&category=amazonhomepage&f=ifr&linkID=542128447a008195fa62ab006dbcb490&t=youtubedown0f-20&tracking_id=youtubedown0f-20"
+                    width="468" height="60" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
+        </div>
+        {#  Amazon Ad - Banner Links For Home Page Link (2016) 468 x 60 #}
+    </div>
 
     <div class="global-loader-mask">
         <div class="lds-roller">
@@ -95,6 +104,7 @@
         let itag = null;
 
         $("#youtube-get-stream-list-form").submit(function (e) {
+            console.log(e);
             e.preventDefault();
 
             let url = $("#url").val();
