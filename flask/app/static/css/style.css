@@ -94,11 +94,11 @@ body * {
 }
 
 .header-banner {
-    margin-bottom: 100px;
+    margin-bottom: auto;
 }
 
 .footer-banner {
-    margin-top: 100px;
+    margin-top: auto;
 }
 
 .ad-banner {
