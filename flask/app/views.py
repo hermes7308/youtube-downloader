@@ -45,10 +45,10 @@ def get_stream_list():
             "stream_list": stream_list,
         }
     except Exception as e:
-        logging.error("This is block download. exception: {e}".format(e=e))
+        logging.error("Blocked download. exception: {e}".format(e=e))
         return {
             "status": "FAIL",
-            "message": "Sorry, this youtube is block to download.",
+            "message": "Sorry, Youtube block this video to download.",
             "error": str(e)
         }
 
