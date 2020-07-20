@@ -22,18 +22,23 @@
     </form>
 
     <form class="form-group" id="youtube-download-form" method="GET" style="display: none;">
-        <label> Media type
-            <select id="media_type" class="custom-select"> </select>
-        </label>
-        <label> Mime type
-            <select id="mime_type" class="custom-select"> </select>
-        </label>
-        <label> Frames per second
-            <select id="fps" class="custom-select"> </select>
-        </label>
-        <label> Quality
-            <select id="res" class="custom-select"> </select>
-        </label>
+        <div>
+            <div>
+                <label for="media_type"> Media type </label>
+                <select id="media_type" class="custom-select"> </select>
+            </div>
+            <div>
+                <label for="mime_type"> Mime type </label>
+                <select id="mime_type" class="custom-select"> </select>
+            </div>
+            <div>
+                <label for="fps"> Frames per sec </label>
+                <select id="fps" class="custom-select"> </select></div>
+            <div>
+                <label for="res"> Quality </label>
+                <select id="res" class="custom-select"> </select>
+            </div>
+        </div>
         <input class="btn" type="submit" value="Download"/>
     </form>
 

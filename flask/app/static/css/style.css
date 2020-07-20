@@ -2,12 +2,9 @@ html, body {
     width: 100%;
     height: 100%;
 }
+
 body * {
     font-family: "Rowdies", serif;
-}
-
-label {
-    font-size: 20px;
 }
 
 .container {
@@ -19,7 +16,7 @@ label {
 }
 
 .container > h1 {
-    font-size: 7vw;
+    font-size: 70px;
     font-weight: bold;
     background-color: white;
     color: #ff5555;
@@ -35,23 +32,46 @@ label {
 #youtube-get-stream-list-form > input[type='text'] {
     display: inline-block;
     flex-grow: 1;
-    width: calc(100% - 98px);
+    width: calc(100% - 105px);
 }
 
 #youtube-get-stream-list-form > input[type='submit'] {
+    margin-left: 7px;
     width: 98px;
 }
 
 #youtube-download-form {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     flex-wrap: wrap;
     justify-content: center;
 }
 
-#youtube-download-form > * {
-    margin-right: 20px;
-    margin-left: 20px;
+#youtube-download-form > div {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+
+#youtube-download-form > div > div {
+    padding-left: 5px;
+    padding-right: 5px
+}
+
+#youtube-download-form > div > div:first-child {
+    padding-left: 0;
+}
+
+#youtube-download-form > div > div:last-child {
+    padding-right: 0;
+}
+
+#youtube-download-form > div > select {
+    width: 130px;
 }
 
 .btn {
@@ -74,6 +94,31 @@ label {
 .container > ul a {
     color: #fb453e;
     font-size: 20px;
+}
+
+
+@media (min-width: 1000px) {
+    #youtube-download-form > div > div {
+        width: 25%;
+    }
+
+    #youtube-download-form label {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 1000px) {
+    .container > h1 {
+        font-size: 50px;
+    }
+
+    #youtube-download-form > div > div {
+        width: 50%;
+    }
+
+    #youtube-download-form label {
+        font-size: 17px;
+    }
 }
 
 /* Loader */
