@@ -48,7 +48,8 @@ def get_stream_list():
         logging.error("This is block download. exception: {e}".format(e=e))
         return {
             "status": "FAIL",
-            "message": "Sorry, this youtube is block to download."
+            "message": "Sorry, this youtube is block to download.",
+            "error": str(e)
         }
 
 
